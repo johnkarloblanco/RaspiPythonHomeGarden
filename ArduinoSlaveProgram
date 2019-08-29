@@ -1,0 +1,51 @@
+int output1 = 1;
+int output2 = 2;
+int output3 = 3;
+int output4 = 4;
+
+int input6 = 6;
+int input7 = 7;
+int input8 = 8;
+int input9 = 9;
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(1, OUTPUT);
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+
+  pinMode(6, INPUT);
+  pinMode(7, INPUT);
+  pinMode(8, INPUT);
+  pinMode(9, INPUT);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  if(digitalRead(input6) == HIGH){ //This checks for input from raspberry pi
+    digitalWrite(output1, HIGH);
+  } else{
+    digitalWrite(output1, LOW);
+  }
+  
+  if(digitalRead(input7) == HIGH){ //This checks for input from raspberry pi
+    digitalWrite(output2, HIGH);
+  } else{
+    digitalWrite(output2, LOW);
+  }
+  
+  if(digitalRead(input8) == HIGH){ //This checks for input from raspberry pi
+    digitalWrite(output3, HIGH);
+  } else{
+    digitalWrite(output3, LOW);
+  }
+  
+  if(digitalRead(input9) == HIGH){ //This checks for input from raspberry pi
+    digitalWrite(output4, HIGH);
+  } else{
+    digitalWrite(output4, LOW);
+  }
+
+}
