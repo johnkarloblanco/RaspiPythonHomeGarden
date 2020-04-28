@@ -6,92 +6,109 @@ import math
 import datetime
 import dht11
 
-GPIO.setmode(GPIO.BOARD)
+def initialization():
+    GPIO.setmode(GPIO.BOARD)
 
-#remember to add dht11.py to the folder for this program.
+    # remember to add dht11.py to the folder for this program.
 
+    GPIO.setup(7, GPIO.OUT)  # this is the light
+    GPIO.setup(5, GPIO.OUT)  # this is the fan
+    GPIO.setup(11, GPIO.OUT)
+    GPIO.setup(13, GPIO.OUT)
 
-GPIO.setup(7, GPIO.OUT) # this is the light
-GPIO.setup(5, GPIO.OUT) # this is the fan
-GPIO.setup(11, GPIO.OUT) 
-GPIO.setup(13, GPIO.OUT) 
+    GPIO.output(7, 1)
+    GPIO.output(5, 1)
+    GPIO.output(11, 1)
 
+def lightOn():
+    GPIO.output(7, 0)
+    print("Light on")
 
-GPIO.output(7, 1) 
-GPIO.output(5, 1) 
-GPIO.output(11, 1) 
+def lightOff():
+    GPIO.output(7, 1)
+    print("Light off")
 
+def fanOn():
+    GPIO.output(5, 0)
+    print("Fan on")
 
+def fanOff():
+    GPIO.output(5, 1)
+    print("Fan off")
 
-def lighton():
-	GPIO.output(7,0)
-	print("Light on")
-
-	
-def lightoff():
-	GPIO.output(7,1)
-	print("Light off")
-	
-def fanon(): 
-	GPIO.output(5,0)
-	print("Fan on")
-		
-def fanoff():
-	GPIO.output(5,1)
-	print("Fan off")
-	
-	
 def istimeright():
-	thetimeis = datetime.datetime.now().strftime("%H%M")
-	return (thetimeis)
+    thetimeis = datetime.datetime.now().strftime("%H%M")
+    return (thetimeis)
+def start_up_test():
+    lightOff()
+    fanOff()
+    time.sleep(2)
+    lightOn()
+    fanOn()
+
+
+def instansiate_dht11():
+    instance = dht11.DHT11(pin=3)
+    return instance
+
+def lightSetTime(startTime, endTime, startTime2, endTime2):
+    instance = instansiate_dht11()
+    startTime = startTime * 100
+    endTime = endTime * 100
+    
+    theTimeIs = int(istimeright())
+    result = instance.read()
+    print("Start")
+    print(theTimeIs)
+    print(datetime.datetime.now().strftime("%H:%M"))
+    if (theTimeIs >= startTime and theTimeIs <= endTime) or (theTimeIs >= startTime2 and theTimeIs <= endTime2):
+	lightOn()
+	print("Last valid input: " + str(datetime.datetime.now()))
+	print("Temperature: %d C" % result.temperature)
+	print("Temperature: %d F" % ((result.temperature * 9 / 5) + 32))
+	print("Humidity: %d %%" % result.humidity)
+    
+    else:
+	lightOff()
+	print("Pi is in sleep mode.")
+
+    # run fan every set time
+    # if theTimeIs >= 1255 and theTimeIs <= 1300:
+    #     fanOn()
+    # elif theTimeIs >= 1355 and theTimeIs <= 1400:
+    #     fanOn()
+    # elif theTimeIs >= 1455 and theTimeIs <= 1500:
+    #     fanOn()
+    # elif theTimeIs >= 1555 and theTimeIs <= 1600:
+    #     fanOn()
+    # elif theTimeIs >= 1655 and theTimeIs <= 1700:
+    #     fanOn()
+    # elif theTimeIs >= 1755 and theTimeIs <= 1800:
+    #     fanOn()
+    # elif theTimeIs >= 1855 and theTimeIs <= 1900:
+    #     fanOn()
+    # elif theTimeIs >= 1955 and theTimeIs <= 2000:
+    #     fanOn()
+    # elif theTimeIs >= 2050 and theTimeIs <= 2100:
+    #     fanOn()
+    #     print("fanOn")
+    # else:
+    #     fanOff()
+    # print("End")
+
+    time.sleep(5)
 	
-instance = dht11.DHT11(pin=3)
 
-lightoff()
-fanoff()
-
-time.sleep(5)
-		
-done = False
-
-while not done:
-	theTimeIs = int(istimeright())
-	result=instance.read()
-	print(theTimeIs)
-	print(datetime.datetime.now().strftime("%H:%M"))
-	if theTimeIs >= 630 and theTimeIs <=2200:
-		lighton()
-		print("Last valid input: " + str(datetime.datetime.now()))
-		print("Temperature: %d C" % result.temperature)
-		print("Temperature: %d F" % ((result.temperature * 9/5)+32))
-		print("Humidity: %d %%" % result.humidity)
-	else:
-		lightoff()
-	if theTimeIs >= 1255 and theTimeIs <=1300:
-		fanon()
-	elif theTimeIs >= 1350 and theTimeIs <=1400:
-		fanon()
-	elif theTimeIs >= 1450 and theTimeIs <=1500:
-		fanon()
-	elif theTimeIs >= 1550 and theTimeIs <=1600:
-		fanon()
-	elif theTimeIs >= 1650 and theTimeIs <=1700:
-		fanon()
-	elif theTimeIs >= 1750 and theTimeIs <=1800:
-		fanon()
-	elif theTimeIs >= 1850 and theTimeIs <=1900:
-		fanon()
-	elif theTimeIs >= 1950 and theTimeIs <=2000:
-		fanon()
-	elif theTimeIs >= 2050 and theTimeIs <=2100:
-		fanon()
-	elif theTimeIs >= 2150 and theTimeIs <=2200:
-		fanon()
-	else:
-		fanoff()
+def main():
+    initialization()
+    start_up_test()
+    time.sleep(5)
+    
+    # run this line forever
+    while True:
+	lightSetTime(6,11,19,23)
 	
-		
-	time.sleep(2)
+        
 
-
-
+if __name__ == "__main__":
+    main()
