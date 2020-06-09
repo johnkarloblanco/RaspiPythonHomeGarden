@@ -64,19 +64,27 @@ def light_set_time(start_time, end_time, start_time2, end_time2):
     instance = instansiate_dht11()
     start_time = start_time * 100
     end_time = end_time * 100
-    
+    start_time2 = start_time2 * 100
+    end_time2 = end_time2 * 100
+
     the_time_is = int(istimeright())
     result = instance.read()
     print("Start")
     print(the_time_is)
-    print(datetime.datetime.now().strftime("%H:%M"))
-    if ((the_time_is >= start_time) and (the_time_is <= end_time)) or ((the_time_is >= start_time2) and (the_time_is <= end_time2)):
+    print("Current Time:" + str(the_time_is))
+    # print(datetime.datetime.now().strftime("%H:%M"))
+    print("Start time 1: " + str(start_time))
+    print("End time 1: " + str(end_time))
+    print("Start time 2: " + str(start_time2))
+    print("End time 2: " + str(end_time2))
+    if ((the_time_is >= start_time) and (the_time_is <= end_time)) or (
+            (the_time_is >= start_time2) and (the_time_is <= end_time2)):
         light_on()
         print("Last valid input: " + str(datetime.datetime.now()))
         print("Temperature: %d C" % result.temperature)
         print("Temperature: %d F" % ((result.temperature * 9 / 5) + 32))
         print("Humidity: %d %%" % result.humidity)
-    
+
     else:
         light_off()
         print("Pi is in sleep mode.")
@@ -105,18 +113,18 @@ def light_set_time(start_time, end_time, start_time2, end_time2):
     #     fanOff()
     # print("End")
 
-    time.sleep(5)
-    
+    time.sleep(10)
+
 
 def main():
     initialization()
     start_up_test()
-    time.sleep(5)
-    
+    time.sleep(10)
+
     # run this line forever
     while True:
         light_set_time(6, 10, 11, 12)
-        
-        
+
+
 if __name__ == "__main__":
     main()
